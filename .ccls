@@ -1,0 +1,3 @@
+clang
+-Iinclude
+%c -std=gnu99
