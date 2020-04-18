@@ -14,9 +14,11 @@
 
 void try_init_server(server_t *s)
 {
+    long long tmp = 0;
+
     s->res.p_ent = getprotobyname("TCP") ?: errb(strerror(errno));
-    s->res.listener.fd = socket(AF_INET, SOCK_STREAM,
-            s->res.p_ent->p_proto) != -1 ?: (int)errb(strerror(errno));
+    tmp = socket(AF_INET, SOCK_STREAM, s->res.p_ent->p_proto);
+    s->res.listener.fd = tmp != -1 ? tmp : (long)errb(strerror(errno));
     s->res.sock_in->sin_port = htons(s->res.port);
     s->res.sock_in->sin_family = AF_INET;
     s->res.sock_in->sin_addr.s_addr = INADDR_ANY;
