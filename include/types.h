@@ -8,6 +8,14 @@
 #ifndef TYPES_H_
 # define TYPES_H_
 
+# include <sys/types.h>
+
+/* cannot be `static const int` because it's used in `server_t` */
+# define MAXCONN (50)
+
+# define SEND(f, d, s) (write((f), (d), (s)))
+# define RECV(f, d, s) (read((f), (d), (s)))
+
 typedef enum {
     SOCKET_DONE,
     SOCKET_NOT_READY,
@@ -26,19 +34,18 @@ typedef struct {
 } client_t;
 
 typedef struct {
-    socket_t listener;
-    socket_t client;
+    socket_t lsn;
     unsigned short port;
     char *home;
     struct protoent *p_ent;
-    struct sockaddr_in *sock_in;
+    struct sockaddr_in sin;
 } serverres_t;
 
 typedef struct {
     serverres_t res;
+    client_t clients[MAXCONN];
+    fd_set readfds;
+    int maxsd;
 } server_t;
-
-# define SEND(f, d, s) (write((f), (d), (s)))
-# define RECV(f, d, s) (read((f), (d), (s)))
 
 #endif
