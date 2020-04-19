@@ -11,17 +11,10 @@
 #include "cmds.h"
 #include "helpers.h"
 
-static void mfree(void *p)
-{
-    if (p) {
-        free(p);
-        p = NULL;
-    }
-}
-
 void cmd_quit(client_t *c, char *buf)
 {
-    memset(buf, 0, MAXBUFLEN);
+    if (buf)
+        memset(buf, 0, MAXBUFLEN);
     msgsend(c->f.fd, 221, "");
     c->f.status = SOCKET_NOT_READY;
     mfree(c->addr_to);

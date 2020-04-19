@@ -19,5 +19,6 @@ void show_help(int exc);
 void *errb(const char *errmsg);
 void append_log(client_t *, char *);
 void msgsend(int sock, int code, char *msg);
+void mfree(void *p);
 
 #endif
