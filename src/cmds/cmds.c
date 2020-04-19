@@ -12,15 +12,13 @@
 #include "cmds.h"
 #include "helpers.h"
 
-static cmdstr_t *getcmd(char *buf);
-
 static const cmdpair_t CMDS[] = {
-    { "user" , 4 , cmd_user          } ,
-    { "pass" , 4 , cmd_pass          } ,
-    { "cwd"  , 3 , cmd_unimplemented } ,
-    { "cdup" , 4 , cmd_unimplemented } ,
+    { "user" , 4 , cmd_user } ,
+    { "pass" , 4 , cmd_pass } ,
+    { "cwd"  , 3 , cmd_cwd  } ,
+    { "cdup" , 4 , cmd_cdup } ,
 
-    { "quit" , 4 , cmd_quit          } ,
+    { "quit" , 4 , cmd_quit } ,
 
     { "port" , 4 , cmd_unimplemented } ,
     { "pasv" , 4 , cmd_unimplemented } ,
@@ -29,21 +27,14 @@ static const cmdpair_t CMDS[] = {
     { "retr" , 4 , cmd_unimplemented } ,
     { "list" , 4 , cmd_unimplemented } ,
     { "dele" , 4 , cmd_unimplemented } ,
-    { "pwd"  , 3 , cmd_pwd           } ,
+    { "pwd"  , 3 , cmd_pwd  } ,
 
-    { "help" , 4 , cmd_help          } ,
+    { "help" , 4 , cmd_help } ,
 
-    { "noop" , 4 , cmd_noop          } ,
+    { "noop" , 4 , cmd_noop } ,
 
-    { NULL   , 0 , cmd_unknown       } ,
+    { NULL   , 0 , cmd_unknown } ,
 };
-
-void handle_cmd(char *buf, client_t *c)
-{
-    cmdstr_t *cmd = getcmd(buf);
-
-    cmd->fn(c, cmd->arg);
-}
 
 static cmdstr_t *getcmd(char *buf)
 {
@@ -62,8 +53,12 @@ static cmdstr_t *getcmd(char *buf)
             break;
         }
     to.arg = strtok(NULL, "\r");
-    puts(cmd);
-    if (to.arg)
-        puts(to.arg);
     return &to;
+}
+
+void handle_cmd(char *buf, client_t *c)
+{
+    cmdstr_t *cmd = getcmd(buf);
+
+    cmd->fn(c, cmd->arg);
 }

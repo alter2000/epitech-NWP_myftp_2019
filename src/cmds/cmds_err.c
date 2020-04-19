@@ -14,7 +14,7 @@
 void cmd_quit(client_t *c, char *buf)
 {
     if (buf)
-        memset(buf, 0, MAXBUFLEN);
+        memset(buf, 0, strlen(buf));
     msgsend(c->f.fd, 221, "");
     c->f.status = SOCKET_NOT_READY;
     mfree(c->addr_to);
@@ -29,27 +29,27 @@ void cmd_quit(client_t *c, char *buf)
 void cmd_help(client_t *c, char *buf)
 {
     if (buf)
-        memset(buf, 0, MAXBUFLEN);
+        memset(buf, 0, strlen(buf));
     msgsend(c->f.fd, 214, "");
 }
 
 void cmd_noop(client_t *c, char *buf)
 {
     if (buf)
-        memset(buf, 0, MAXBUFLEN);
+        memset(buf, 0, strlen(buf));
     msgsend(c->f.fd, 200, "");
 }
 
 void cmd_unknown(client_t *c, char *buf)
 {
     if (buf)
-        memset(buf, 0, MAXBUFLEN);
+        memset(buf, 0, strlen(buf));
     msgsend(c->f.fd, 500, "");
 }
 
 void cmd_unimplemented(client_t *c, char *buf)
 {
     if (buf)
-        memset(buf, 0, MAXBUFLEN);
+        memset(buf, 0, strlen(buf));
     msgsend(c->f.fd, 502, "");
 }

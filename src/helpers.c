@@ -30,7 +30,7 @@ static const err_t STRSTATUS[] = {
     { 227 , "Entering passive mode " },
     { 230 , "User logged in, proceed." },
     { 250 , "Requested file action okay, completed." },
-    { 257 , "DIRNAME created." },
+    { 257 , "DIRNAME present." },
 
     { 331 , "User name okay, need password." },
     { 332 , "Need account for login." },
