@@ -26,7 +26,7 @@ static const cmdpair_t CMDS[] = {
     { "stor" , 4 , cmd_unimplemented } ,
     { "retr" , 4 , cmd_unimplemented } ,
     { "list" , 4 , cmd_unimplemented } ,
-    { "dele" , 4 , cmd_unimplemented } ,
+    { "dele" , 4 , cmd_dele } ,
     { "pwd"  , 3 , cmd_pwd  } ,
 
     { "help" , 4 , cmd_help } ,
