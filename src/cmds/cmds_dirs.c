@@ -7,9 +7,19 @@
 
 #include <errno.h>
 #include <string.h>
+#include <stdlib.h>
+#include <limits.h>
 #include <unistd.h>
 #include "helpers.h"
 #include "cmds.h"
+
+static char *propercwd()
+{
+    char p[PATH_MAX] = {0};
+
+    getcwd(p, sizeof(p));
+    return strdup(p);
+}
 
 void cmd_pwd(client_t *c, char *buf)
 {
@@ -28,6 +38,8 @@ void cmd_cwd(client_t *c, char *buf)
         msgsend(c->f.fd, 451, strerror(errno));
         return;
     }
+    free(c->path);
+    c->path = propercwd();
     msgsend(c->f.fd, 250, "");
 }
 
@@ -39,5 +51,7 @@ void cmd_cdup(client_t *c, char *buf)
         msgsend(c->f.fd, 451, strerror(errno));
         return;
     }
+    free(c->path);
+    c->path = propercwd();
     msgsend(c->f.fd, 200, "");
 }
