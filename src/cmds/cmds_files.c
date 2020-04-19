@@ -13,6 +13,10 @@
 
 void cmd_dele(client_t *c, char *buf)
 {
+    if (!c->isauth) {
+        msgsend(c->f.fd, 530, "");
+        return;
+    }
     if (remove(buf)) {
         msgsend(c->f.fd, 450, strerror(errno));
         return;
@@ -22,6 +26,9 @@ void cmd_dele(client_t *c, char *buf)
 
 void cmd_list(client_t *c, char *buf)
 {
-    (void)c;
+    if (!c->isauth) {
+        msgsend(c->f.fd, 530, "");
+        return;
+    }
     (void)buf;
 }

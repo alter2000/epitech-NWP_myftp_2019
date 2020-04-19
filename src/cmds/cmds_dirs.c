@@ -30,6 +30,10 @@ void cmd_pwd(client_t *c, char *buf)
 
 void cmd_cwd(client_t *c, char *buf)
 {
+    if (!c->isauth) {
+        msgsend(c->f.fd, 530, "");
+        return;
+    }
     if (!buf) {
         msgsend(c->f.fd, 202, "");
         return;
@@ -47,6 +51,10 @@ void cmd_cdup(client_t *c, char *buf)
 {
     if (buf)
         memset(buf, 0, strlen(buf));
+    if (!c->isauth) {
+        msgsend(c->f.fd, 530, "");
+        return;
+    }
     if (chdir("../")) {
         msgsend(c->f.fd, 451, strerror(errno));
         return;
