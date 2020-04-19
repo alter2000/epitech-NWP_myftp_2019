@@ -9,6 +9,7 @@
 #include <netdb.h>
 #include <string.h>
 #include <stdbool.h>
+#include <stdlib.h>
 #include <unistd.h>
 #include "helpers.h"
 #include "server.h"
@@ -17,8 +18,6 @@ static void keep_init_server(server_t *s);
 
 void try_init_server(server_t *s)
 {
-    int tmp = 1;
-
     s->res.p_ent = getprotobyname("TCP") ? getprotobyname("TCP")
         : errb(strerror(errno));
     s->res.lsn.fd = socket(AF_INET, SOCK_STREAM, s->res.p_ent->p_proto);
@@ -29,28 +28,20 @@ void try_init_server(server_t *s)
     s->res.sin.sin_port = htons(s->res.port);
     s->res.sin.sin_family = AF_INET;
     s->res.sin.sin_addr.s_addr = htonl(INADDR_ANY);
-    if (setsockopt(s->res.lsn.fd, SOL_SOCKET,
-            SO_REUSEADDR | SO_REUSEPORT, &tmp, sizeof(tmp)) == -1) {
-        close(s->res.lsn.fd);
-        errb(strerror(errno));
-    }
     keep_init_server(s);
 }
 
 static void keep_init_server(server_t *s)
 {
-    if (bind(s->res.lsn.fd, (const struct sockaddr *)&s->res.sin,
-            sizeof(s->res.sin)) == -1) {
-        shutdown(s->res.lsn.fd, 2);
-        close(s->res.lsn.fd);
-        errb(strerror(errno));
-    }
-    if ((listen(s->res.lsn.fd, MAXCONN)) == -1) {
-        close(s->res.lsn.fd);
-        errb(strerror(errno));
-    }
-}
+    int tmp = 1;
 
-void run_server(server_t *s)
-{
+    if (setsockopt(s->res.lsn.fd, SOL_SOCKET,
+            SO_REUSEADDR | SO_REUSEPORT, &tmp, sizeof(tmp)) == -1
+        || bind(s->res.lsn.fd, (const struct sockaddr *)&s->res.sin,
+            sizeof(s->res.sin)) == -1
+        || listen(s->res.lsn.fd, MAXCONN) == -1) {
+            shutdown(s->res.lsn.fd, SHUT_RDWR);
+            close(s->res.lsn.fd);
+            errb(strerror(errno));
+    }
 }

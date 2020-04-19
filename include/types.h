@@ -9,15 +9,17 @@
 # define TYPES_H_
 
 # include <sys/types.h>
+# include <netinet/in.h>
 
-/* cannot be `static const int` because it's used in `server_t` */
+/* maximum connections ("clients"/"requests") */
+/* cannot be `static const int` because it's used in definitions */
 # define MAXCONN (50)
 
-# define SEND(f, d, s) (write((f), (d), (s)))
-# define RECV(f, d, s) (read((f), (d), (s)))
+/* maximum buffer size for commands */
+# define MAXBUFLEN (4096)
 
 typedef enum {
-    SOCKET_DONE,
+    SOCKET_DONE = 0,
     SOCKET_NOT_READY,
     SOCKET_PARTIAL,
     SOCKET_DISCONNECTED,
@@ -31,6 +33,12 @@ typedef struct {
 
 typedef struct {
     socket_t f;
+    char *addr_to;
+    char *addr_from;
+    unsigned short port;
+    char *user;
+    char *pw;
+    char *path;
 } client_t;
 
 typedef struct {
@@ -46,6 +54,7 @@ typedef struct {
     client_t clients[MAXCONN];
     fd_set readfds;
     int maxsd;
+    int active;
 } server_t;
 
 #endif

@@ -16,8 +16,8 @@
 
 int main(int c, char **v)
 {
-    server_t s = {0};
     int p = 0;
+    server_t s = {0};
 
     if (c != 2 && c != 3)
         show_help(84);
