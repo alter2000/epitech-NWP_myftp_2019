@@ -28,5 +28,8 @@ void add_req(int sock, struct sockaddr_in *serv, client_t *r, char *home)
     r->port = ntohs(serv->sin_port);
     r->user = NULL;
     r->pw = NULL;
+    r->isauth = true;
     r->path = strdup(home);
+    msgsend(sock, 220, "");
+    append_log(r, "connected\n");
 }

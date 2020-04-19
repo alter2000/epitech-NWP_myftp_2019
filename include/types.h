@@ -21,9 +21,8 @@
 
 typedef enum {
     SOCKET_NOT_READY = 0,
-    SOCKET_DONE,
-    SOCKET_PARTIAL,
-    SOCKET_DISCONNECTED,
+    SOCKET_READY,
+    SOCKET_INUSE,
     SOCKET_ERROR
 } sstatus_t;
 

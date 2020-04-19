@@ -9,7 +9,7 @@ SRC = $(shell find . -name "*.c")
 
 NAME = myftp
 CPL = gcc
-CFLAGS = -Wextra -Wall -I./include
+CFLAGS = -Wextra -Wall -Wno-implicit-fallthrough -I./include
 
 DPL = clang
 DFLAGS = $(CFLAGS)\

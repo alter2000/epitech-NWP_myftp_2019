@@ -11,24 +11,24 @@
 #include "cmds.h"
 #include "helpers.h"
 
+static void mfree(void *p)
+{
+    if (p) {
+        free(p);
+        p = NULL;
+    }
+}
+
 void cmd_quit(client_t *c, char *buf)
 {
     memset(buf, 0, MAXBUFLEN);
     msgsend(c->f.fd, 221, "");
     c->f.status = SOCKET_NOT_READY;
-    c->isauth = 0;
-    if (c->user)
-        free(c->user);
-    c->user = 0;
-    if (c->pw)
-        free(c->pw);
-    c->pw = 0;
-    free(c->addr_to);
-    c->addr_to = 0;
-    free(c->addr_from);
-    c->addr_from = 0;
-    free(c->path);
-    c->path = 0;
-    close(c->f.fd);
-    c->f.fd = 0;
+    mfree(c->addr_to);
+    mfree(c->addr_from);
+    c->port = 0;
+    mfree(c->user);
+    mfree(c->pw);
+    mfree(c->path);
+    c->isauth = false;
 }

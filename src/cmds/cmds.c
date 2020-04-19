@@ -23,4 +23,6 @@ static void getcmd(char *buf, cmdstr_t *to)
 {
     (void)buf;
     (void)to;
+    /* while (true) switch (*buf) { */
+    /* } */
 }

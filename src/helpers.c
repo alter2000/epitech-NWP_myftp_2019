@@ -12,7 +12,7 @@
 
 static const err_t STRSTATUS[] = {
     { 110 , "Restart marker reply." },
-    { 120 , "Service ready soon." },
+    { 120 , "Service ready in 004 minutes." },
     { 125 , "Data connection already open; transfer starting." },
     { 150 , "File status okay; about to open data connection." },
 
@@ -23,7 +23,7 @@ static const err_t STRSTATUS[] = {
     { 213 , "File status" },
     { 214 , "Help: just look around. There's nothing." },
     { 215 , "LINUX system type" },
-    { 220 , "Service ready." },
+    { 220 , "Service ready for new user." },
     { 221 , "Service closing control connection." },
     { 225 , "Data connection opened." },
     { 226 , "Closing data connection." },
@@ -83,7 +83,7 @@ void append_log(client_t *c, char *buf)
 {
     if (!buf || strlen(buf) < 3)
         return;
-    fprintf(stderr, "%s: %s", c->addr_from, buf);
+    fprintf(stderr, "%s:%d: %s", c->addr_from, c->port, buf);
 }
 
 void msgsend(int sock, int code, char *msg)
