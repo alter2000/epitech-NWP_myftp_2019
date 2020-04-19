@@ -43,10 +43,10 @@ static cmdstr_t *getcmd(char *buf)
 
     if (strlen(buf) < 3)
         return &to;
-    for (int i = 0; i < MAXBUFLEN && buf[i]; buf[i] = tolower(buf[i]), i++);
     cmd = strtok(buf, " ");
     if (!cmd)
         return &to;
+    for (int i = 0; cmd[i]; cmd[i] = tolower(cmd[i]), i++);
     for (int i = 0; CMDS[i].s; i++)
         if (!strncmp(CMDS[i].s, cmd, CMDS[i].slen)) {
             to.fn = CMDS[i].cmd;
