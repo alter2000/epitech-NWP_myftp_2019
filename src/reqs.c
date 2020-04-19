@@ -20,7 +20,6 @@ void add_req(int sock, struct sockaddr_in *serv, client_t *r, char *home)
     r->f.fd = sock;
     r->f.status = SOCKET_NOT_READY;
     if (getsockname(sock, (struct sockaddr *)&sin, &tmp) == -1) {
-        shutdown(sock, SHUT_RDWR);
         close(sock);
         errb(strerror(errno));
     }
@@ -29,5 +28,5 @@ void add_req(int sock, struct sockaddr_in *serv, client_t *r, char *home)
     r->port = ntohs(serv->sin_port);
     r->user = NULL;
     r->pw = NULL;
-    r->path = home;
+    r->path = strdup(home);
 }

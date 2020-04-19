@@ -10,17 +10,18 @@
 
 # include <sys/types.h>
 # include <netinet/in.h>
+# include <stdbool.h>
 
 /* maximum connections ("clients"/"requests") */
 /* cannot be `static const int` because it's used in definitions */
-# define MAXCONN (50)
+# define MAXCONN (51)
 
 /* maximum buffer size for commands */
 # define MAXBUFLEN (4096)
 
 typedef enum {
-    SOCKET_DONE = 0,
-    SOCKET_NOT_READY,
+    SOCKET_NOT_READY = 0,
+    SOCKET_DONE,
     SOCKET_PARTIAL,
     SOCKET_DISCONNECTED,
     SOCKET_ERROR
@@ -39,6 +40,7 @@ typedef struct {
     char *user;
     char *pw;
     char *path;
+    bool isauth;
 } client_t;
 
 typedef struct {

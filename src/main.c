@@ -19,10 +19,12 @@ int main(int c, char **v)
     int p = 0;
     server_t s = {0};
 
-    if (c != 2 && c != 3)
+    if (c > 3 || c == 1)
         show_help(84);
     if (c == 2 && !strncmp(v[1], "-help", 5))
         show_help(0);
+    if (c != 3)
+        show_help(84);
     p = strtol(v[1], NULL, 10);
     s.res.port = (p > 0 && p < 65535) ? p : (long)errb("Invalid port number");
     s.res.home = chdir(v[2]) != -1 ? v[2] : errb(strerror(errno));

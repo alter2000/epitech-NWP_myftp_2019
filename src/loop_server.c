@@ -20,8 +20,9 @@ static void do_clients(client_t *cs, fd_set *fds);
 
 void run_server(server_t *s)
 {
-    for (int cl_sock = check_req(s), idx = 0; true;
-            cl_sock = 0, idx = idx <= MAXCONN ? idx + 1 : 0) {
+    for (int cl_sock, idx = 0; true;
+            cl_sock = 0, idx = idx < MAXCONN - 1 ? idx + 1 : 0) {
+        cl_sock = check_req(s);
         if (cl_sock)
             add_req(cl_sock, &s->res.sin, &s->clients[idx], s->res.home);
         do_clients(s->clients, &s->readfds);
@@ -41,7 +42,6 @@ static int check_req(server_t *s)
     }
     s->active = select(s->maxsd + 1, &s->readfds, NULL, NULL, NULL);
     if (s->active < 0 && errno != EINTR) {
-        shutdown(s->res.lsn.fd, SHUT_RDWR);
         close(s->res.lsn.fd);
         errb(strerror(errno));
     }
@@ -56,7 +56,6 @@ static int new_req(server_t *s)
     if (FD_ISSET(s->res.lsn.fd, &s->readfds)) {
         cl_sock = accept(s->res.lsn.fd, (struct sockaddr *)&s->res.sin, &t);
         if (cl_sock == -1) {
-            shutdown(s->res.lsn.fd, SHUT_RDWR);
             close(s->res.lsn.fd);
             errb(strerror(errno));
         }

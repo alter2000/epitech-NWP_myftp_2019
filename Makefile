@@ -7,20 +7,18 @@
 
 SRC = $(shell find . -name "*.c")
 
-DFLAGS = \
+NAME = myftp
+CPL = gcc
+CFLAGS = -Wextra -Wall -I./include
+
+DPL = clang
+DFLAGS = $(CFLAGS)\
 		 -fsanitize=address \
 		 -fsanitize=alignment \
 		 -fsanitize=enum \
 		 -fsanitize=undefined \
 		 -g
-
 		 # -fsanitize=nullability \
-
-DPL = clang
-
-NAME = myftp
-CPL = gcc
-CFLAGS = -Wextra -Wall -I./include
 
 OBJ = $(SRC:.c=.o)
 

@@ -40,7 +40,6 @@ static void keep_init_server(server_t *s)
         || bind(s->res.lsn.fd, (const struct sockaddr *)&s->res.sin,
             sizeof(s->res.sin)) == -1
         || listen(s->res.lsn.fd, MAXCONN) == -1) {
-            shutdown(s->res.lsn.fd, SHUT_RDWR);
             close(s->res.lsn.fd);
             errb(strerror(errno));
     }

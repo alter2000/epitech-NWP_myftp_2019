@@ -67,13 +67,14 @@ void show_help(int exc)
 {
     puts("USAGE: ./myftp port path\n"
         "\tport  is the port number on which the server socket listens\n"
-        "\tpath  is the path to the home directory for the Anonymous user\n");
+        "\tpath  is the path to the home directory for the Anonymous user");
     exit(exc);
 }
 
 void *errb(const char *errmsg)
 {
     fputs(errmsg, stderr);
+    fputs("\n", stderr);
     exit(84);
     return 0;
 }
@@ -82,14 +83,16 @@ void append_log(client_t *c, char *buf)
 {
     if (!buf || strlen(buf) < 3)
         return;
-    fprintf(stderr, "%s: %s\n", c->addr_from, buf);
+    fprintf(stderr, "%s: %s", c->addr_from, buf);
 }
 
 void msgsend(int sock, int code, char *msg)
 {
     if (!msg || !*msg)
         for (size_t i = 0; STRSTATUS[i].errcode; i++)
-            if (STRSTATUS[i].errcode == code)
+            if (STRSTATUS[i].errcode == code) {
                 msg = (char *)STRSTATUS[i].msg;
+                break;
+            }
     dprintf(sock, "%d %s\r\n", code, msg);
 }
