@@ -10,32 +10,39 @@
 
 # include "types.h"
 
-typedef void (*cmdptr)(int, char *, client_t *);
-
-typedef enum {
-    USER,
-    PASS,
-    CWD,
-    CDUP,
-    QUIT,
-    DELE,
-    PWD,
-    PASV,
-    PORT,
-    HELP,
-    NOOP,
-    RETR,
-    STOR,
-    LIST,
-} cmdverb_t;
+typedef void (*cmdptr)(client_t *, char *);
 
 typedef struct {
-    cmdverb_t verb;
     char *arg;
     cmdptr fn;
 } cmdstr_t;
 
-void handle_cmd(int sock, char *buf, client_t *);
+typedef struct {
+    const char * const s;
+    short slen;
+    cmdptr cmd;
+} cmdpair_t;
+
+void handle_cmd(char *buf, client_t *);
+
+void cmd_user(client_t *, char *buf);
+void cmd_pass(client_t *, char *buf);
+void cmd_cwd(client_t *, char *buf);
+void cmd_cdup(client_t *, char *buf);
+
+void cmd_port(client_t *, char *buf);
+void cmd_pasv(client_t *, char *buf);
+
+void cmd_stor(client_t *, char *buf);
+void cmd_retr(client_t *, char *buf);
+void cmd_list(client_t *, char *buf);
+void cmd_dele(client_t *, char *buf);
+void cmd_pwd(client_t *, char *buf);
+
 void cmd_quit(client_t *, char *buf);
+void cmd_help(client_t *, char *buf);
+void cmd_noop(client_t *, char *buf);
+void cmd_unknown(client_t *, char *buf);
+void cmd_unimplemented(client_t *, char *buf);
 
 #endif

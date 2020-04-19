@@ -99,6 +99,6 @@ static void do_clients(client_t cs[MAXCONN], fd_set *fds)
                 continue;
             }
             append_log(&cs[i], buf);
-            handle_cmd(cs[i].f.fd, buf, &cs[i]);
+            handle_cmd(buf, &cs[i]);
         }
 }
