@@ -13,17 +13,9 @@
 
 void cmd_quit(client_t *c, char *buf)
 {
-    if (buf)
-        memset(buf, 0, strlen(buf));
+    for (size_t i = 0; buf && buf[i] && i < MAXBUFLEN; buf[i] = 0, i++);
     msgsend(c->f.fd, 221, "");
-    c->f.status = SOCKET_NOT_READY;
-    mfree(c->addr_to);
-    mfree(c->addr_from);
-    c->port = 0;
-    mfree(c->user);
-    mfree(c->pw);
-    mfree(c->path);
-    c->isauth = false;
+    cleanup_client(c);
 }
 
 void cmd_help(client_t *c, char *buf)

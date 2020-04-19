@@ -16,26 +16,14 @@
 #include "server.h"
 #include "cmds.h"
 
-static server_t *get_server(void)
-{
-    static server_t s = {0};
-
-    return &s;
-}
-
 static void sigclose(int signum)
 {
     server_t *s = get_server();
 
+    for (size_t i = 0; i < MAXCONN; i++)
+        cleanup_client(&s->clients[i]);
     if (s->res.lsn.fd != -1)
         close(s->res.lsn.fd);
-    for (size_t i = 0; i < MAXCONN; i++) {
-        mfree(s->clients[i].addr_to);
-        mfree(s->clients[i].addr_from);
-        mfree(s->clients[i].user);
-        mfree(s->clients[i].pw);
-        mfree(s->clients[i].path);
-    }
     errb(strsignal(signum));
 }
 

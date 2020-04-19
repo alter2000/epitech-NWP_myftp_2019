@@ -38,7 +38,7 @@ void cmd_pass(client_t *c, char *buf)
         msgsend(c->f.fd, 332, "");
         return;
     }
-    if (!strncmp(c->user, "Anonymous", 9) && !*buf) {
+    if (!strncmp(c->user, "Anonymous", 9) && (!buf || !*buf)) {
         c->pw = strdup("");
         c->isauth = true;
         msgsend(c->f.fd, 230, "");

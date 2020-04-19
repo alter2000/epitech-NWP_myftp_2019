@@ -58,7 +58,7 @@ static cmdstr_t *getcmd(char *buf)
             to.forks = CMDS[i].forks;
             break;
         }
-    to.arg = strtok(NULL, "\r");
+    to.arg = strtok(NULL, "\r\n");
     return &to;
 }
 

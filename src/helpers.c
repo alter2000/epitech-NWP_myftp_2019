@@ -96,11 +96,3 @@ void msgsend(int sock, int code, char *msg)
             }
     dprintf(sock, "%d %s\r\n", code, msg);
 }
-
-void mfree(void *p)
-{
-    if (p) {
-        free(p);
-        p = NULL;
-    }
-}

@@ -21,4 +21,7 @@ void append_log(client_t *, char *);
 void msgsend(int sock, int code, char *msg);
 void mfree(void *p);
 
+server_t *get_server(void);
+void cleanup_client(client_t *);
+
 #endif
