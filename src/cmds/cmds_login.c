@@ -20,6 +20,7 @@ void cmd_user(client_t *c, char *buf)
         if (!c->pw) {
             msgsend(c->f.fd, 331, "");
         } else if (!strcmp(c->pw, "")) {
+            c->isauth = true;
             msgsend(c->f.fd, 230, "");
         } else
             msgsend(c->f.fd, 530, "");
@@ -39,6 +40,7 @@ void cmd_pass(client_t *c, char *buf)
     }
     if (!strncmp(c->user, "Anonymous", 9) && !*buf) {
         c->pw = strdup("");
+        c->isauth = true;
         msgsend(c->f.fd, 230, "");
     }
 }

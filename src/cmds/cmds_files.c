@@ -22,4 +22,6 @@ void cmd_dele(client_t *c, char *buf)
 
 void cmd_list(client_t *c, char *buf)
 {
+    (void)c;
+    (void)buf;
 }
