@@ -43,7 +43,7 @@ static const cmdpair_t CMDS[] = {
 
 static cmdstr_t *getcmd(char *buf)
 {
-    static cmdstr_t to = {NULL, cmd_unknown};
+    static cmdstr_t to = {NULL, cmd_unknown, false};
     char *cmd = NULL;
 
     if (strlen(buf) < 3)

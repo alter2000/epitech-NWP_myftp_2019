@@ -13,7 +13,7 @@
 #include "helpers.h"
 #include "cmds.h"
 
-static char *propercwd()
+static char *propercwd(void)
 {
     char p[PATH_MAX] = {0};
 

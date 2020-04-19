@@ -16,7 +16,7 @@
 #include "server.h"
 #include "cmds.h"
 
-static server_t *get_server()
+static server_t *get_server(void)
 {
     static server_t s = {0};
 
