@@ -15,10 +15,12 @@ typedef void (*cmdptr)(client_t *, char *);
 typedef struct {
     char *arg;
     cmdptr fn;
+    bool forks;
 } cmdstr_t;
 
 typedef struct {
     const char * const s;
+    bool forks;
     short slen;
     cmdptr cmd;
 } cmdpair_t;
