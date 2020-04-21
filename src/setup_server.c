@@ -6,7 +6,6 @@
 */
 
 #include <errno.h>
-#include <netdb.h>
 #include <string.h>
 #include <stdbool.h>
 #include <stdlib.h>

@@ -25,7 +25,10 @@ void cmd_pwd(client_t *c, char *buf)
 {
     if (buf)
         memset(buf, 0, strlen(buf));
-    msgsend(c->f.fd, 257, c->path);
+    if (!c->isauth)
+        msgsend(c->f.fd, 530, "");
+    else
+        msgsend(c->f.fd, 257, c->path);
 }
 
 void cmd_cwd(client_t *c, char *buf)
@@ -42,7 +45,7 @@ void cmd_cwd(client_t *c, char *buf)
         msgsend(c->f.fd, 451, strerror(errno));
         return;
     }
-    free(c->path);
+    mfree(c->path);
     c->path = propercwd();
     msgsend(c->f.fd, 250, "");
 }
@@ -59,7 +62,7 @@ void cmd_cdup(client_t *c, char *buf)
         msgsend(c->f.fd, 451, strerror(errno));
         return;
     }
-    free(c->path);
+    mfree(c->path);
     c->path = propercwd();
     msgsend(c->f.fd, 200, "");
 }

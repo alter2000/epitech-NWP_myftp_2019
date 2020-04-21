@@ -25,12 +25,12 @@ static const cmdpair_t CMDS[] = {
 
     { "quit" , false , 4 , cmd_quit } ,
 
-    { "port" , false , 4 , cmd_unimplemented } ,
-    { "pasv" , false , 4 , cmd_unimplemented } ,
+    { "port" , false , 4 , cmd_port } ,
+    { "pasv" , false , 4 , cmd_pasv } ,
 
     { "stor" , true  , 4 , cmd_unimplemented } ,
     { "retr" , true  , 4 , cmd_unimplemented } ,
-    { "list" , true  , 4 , cmd_unimplemented } ,
+    { "list" , true  , 4 , cmd_list } ,
     { "dele" , false , 4 , cmd_dele } ,
     { "pwd"  , false , 3 , cmd_pwd  } ,
 
@@ -51,9 +51,8 @@ static cmdstr_t *getcmd(char *buf)
     cmd = strtok(buf, " ");
     if (!cmd)
         return &to;
-    for (int i = 0; cmd[i]; cmd[i] = tolower(cmd[i]), i++);
     for (int i = 0; CMDS[i].s; i++)
-        if (!strncmp(CMDS[i].s, cmd, CMDS[i].slen)) {
+        if (!strncasecmp(CMDS[i].s, cmd, CMDS[i].slen)) {
             to.fn = CMDS[i].cmd;
             to.forks = CMDS[i].forks;
             break;

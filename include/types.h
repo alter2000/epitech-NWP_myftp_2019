@@ -10,6 +10,7 @@
 
 # include <sys/types.h>
 # include <netinet/in.h>
+# include <netdb.h>
 # include <stdbool.h>
 
 /* maximum connections ("clients"/"requests") */
@@ -32,6 +33,15 @@ typedef struct {
 } socket_t;
 
 typedef struct {
+    enum cmode_s {
+        CONN_PLAIN = 0,
+        CONN_PASV,
+        CONN_ACTV,
+    } c;
+    int fd;
+} cmode_t;
+
+typedef struct {
     socket_t f;
     char *addr_to;
     char *addr_from;
@@ -40,6 +50,7 @@ typedef struct {
     char *pw;
     char *path;
     bool isauth;
+    cmode_t mode;
 } client_t;
 
 typedef struct {
