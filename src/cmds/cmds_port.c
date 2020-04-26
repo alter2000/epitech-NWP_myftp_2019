@@ -38,18 +38,20 @@ static struct sockaddr_in *get_sockaddr(char *b)
 
 static bool setup_port(client_t *c, char *b)
 {
-    struct sockaddr_in *sin = get_sockaddr(b);
+    const struct sockaddr_in *sin = get_sockaddr(b);
     socklen_t tmp = sizeof(*sin);
+    int newsock = 0;
 
+    newsock = socket(AF_INET, SOCK_STREAM, get_server()->res.p_ent->p_proto);
+    if (!sin || newsock == -1
+        || connect(newsock, (const struct sockaddr *)sin, tmp) == -1)
+        return true;
+    newsock = ntohs(sin->sin_port);
     if (c->f.fd != -1) {
         FD_CLR(c->f.fd, &get_server()->readfds);
         close(c->f.fd);
     }
-    c->f.fd = socket(AF_INET, SOCK_STREAM, get_server()->res.p_ent->p_proto);
-    if (!sin || c->f.fd == -1
-        || connect(c->f.fd, (const struct sockaddr *)sin, tmp) == -1)
-        return true;
-    c->mode.fd = ntohs(sin->sin_port);
+    c->f.fd = newsock;
     return false;
 }
 
