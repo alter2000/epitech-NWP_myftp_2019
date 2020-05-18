@@ -42,7 +42,7 @@ int main(int c, char **v)
         show_help(84);
     p = strtol(v[1], NULL, 10);
     s->res.port = (p > 0 && p < 65535) ? p : (long)errb("Invalid port number");
-    s->res.home = chdir(v[2]) != -1 ? v[2] : errb(strerror(errno));
+    s->res.home = chdir(v[2]) != -1 ? getcwd(NULL, 0) : errb(strerror(errno));
     try_init_server(s);
     run_server(s);
 }

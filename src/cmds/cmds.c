@@ -46,6 +46,9 @@ static cmdstr_t *getcmd(char *buf)
     static cmdstr_t to = {NULL, cmd_unknown, false};
     char *cmd = NULL;
 
+    to.arg = NULL;
+    to.fn = cmd_unknown;
+    to.forks = false;
     if (strlen(buf) < 3)
         return &to;
     cmd = strtok(buf, " ");

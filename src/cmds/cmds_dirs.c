@@ -13,14 +13,6 @@
 #include "helpers.h"
 #include "cmds.h"
 
-static char *propercwd(void)
-{
-    char p[PATH_MAX] = {0};
-
-    getcwd(p, sizeof(p));
-    return strdup(p);
-}
-
 void cmd_pwd(client_t *c, char *buf)
 {
     if (buf)
@@ -46,7 +38,7 @@ void cmd_cwd(client_t *c, char *buf)
         return;
     }
     mfree(c->path);
-    c->path = propercwd();
+    c->path = getcwd(NULL, 0);
     msgsend(c->f.fd, 250, "");
 }
 
@@ -63,6 +55,6 @@ void cmd_cdup(client_t *c, char *buf)
         return;
     }
     mfree(c->path);
-    c->path = propercwd();
+    c->path = getcwd(NULL, 0);
     msgsend(c->f.fd, 200, "");
 }
