@@ -25,20 +25,10 @@ void cmd_dele(client_t *c, char *buf)
     msgsend(c->f.fd, 250, "");
 }
 
-void cmd_list(client_t *c, char *buf)
+static void cmd_list_cont(client_t *c, char *buf)
 {
-    DIR *d;
+    DIR *d = opendir(buf);
 
-    if (!c->isauth) {
-        msgsend(c->f.fd, 530, "");
-        return;
-    }
-    if (c->mode.c == CONN_PLAIN) {
-        msgsend(c->f.fd, 425, "");
-        return;
-    }
-    buf = (buf || *buf) ? buf : ".";
-    d = opendir(buf);
     if (!d) {
         msgsend(c->f.fd, 450, strerror(errno));
         return;
@@ -48,4 +38,18 @@ void cmd_list(client_t *c, char *buf)
         dprintf(c->f.fd, "  %s\r\n", ent->d_name);
     msgsend(c->f.fd, 226, "");
     closedir(d);
+}
+
+void cmd_list(client_t *c, char *buf)
+{
+    if (!c->isauth) {
+        msgsend(c->f.fd, 530, "");
+        return;
+    }
+    if (c->mode.c == CONN_PLAIN) {
+        msgsend(c->f.fd, 425, "");
+        return;
+    }
+    buf = (buf || *buf) ? buf : ".";
+    cmd_list_cont(c, buf);
 }
