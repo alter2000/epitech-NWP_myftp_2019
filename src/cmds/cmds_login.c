@@ -9,6 +9,17 @@
 #include "cmds.h"
 #include "helpers.h"
 
+static void cmd_user_handle_pass(client_t *c)
+{
+    if (!c->pw) {
+        msgsend(c->f.fd, 331, "");
+    } else if (!strcmp(c->user, "Anonymous") && !strcmp(c->pw, "")) {
+        c->isauth = true;
+        msgsend(c->f.fd, 230, "");
+    } else
+        msgsend(c->f.fd, 530, "");
+}
+
 void cmd_user(client_t *c, char *buf)
 {
     if (!buf)
@@ -17,19 +28,9 @@ void cmd_user(client_t *c, char *buf)
         msgsend(c->f.fd, 230, "");
         return;
     }
-    if (!strncmp(buf, "Anonymous", 9)) {
-        mfree(c->user);
-        c->user = strdup("Anonymous");
-        if (!c->pw) {
-            msgsend(c->f.fd, 331, "");
-        } else if (!strcmp(c->pw, "")) {
-            c->isauth = true;
-            msgsend(c->f.fd, 230, "");
-            return;
-        } else
-            msgsend(c->f.fd, 530, "");
-    } else
-        msgsend(c->f.fd, 530, "");
+    mfree(c->user);
+    c->user = strdup(buf);
+    cmd_user_handle_pass(c);
 }
 
 void cmd_pass(client_t *c, char *buf)
@@ -49,5 +50,6 @@ void cmd_pass(client_t *c, char *buf)
         c->pw = strdup("");
         c->isauth = true;
         msgsend(c->f.fd, 230, "");
-    }
+    } else
+        msgsend(c->f.fd, 530, "");
 }

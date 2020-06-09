@@ -18,8 +18,8 @@ void cmd_dele(client_t *c, char *buf)
         msgsend(c->f.fd, 530, "");
         return;
     }
-    if (remove(buf)) {
-        msgsend(c->f.fd, 450, strerror(errno));
+    if (!buf || !*buf || remove(buf)) {
+        msgsend(c->f.fd, 550, strerror(errno));
         return;
     }
     msgsend(c->f.fd, 250, "");
@@ -28,13 +28,17 @@ void cmd_dele(client_t *c, char *buf)
 static void cmd_list_cont(client_t *c, char *buf)
 {
     DIR *d = opendir(buf);
+    struct dirent *ent = readdir(d);
 
     if (!d) {
-        msgsend(c->f.fd, 450, strerror(errno));
+        msgsend(c->f.fd, 550, strerror(errno));
+    } else
+        msgsend(c->f.fd, 150, "");
+    if (!ent) {
+        msgsend(c->f.fd, 550, strerror(errno));
         return;
     }
-    msgsend(c->f.fd, 150, "");
-    for (struct dirent *ent = readdir(d); ent; ent = readdir(d))
+    for (; ent; ent = readdir(d))
         dprintf(c->f.fd, "  %s\r\n", ent->d_name);
     msgsend(c->f.fd, 226, "");
     closedir(d);
