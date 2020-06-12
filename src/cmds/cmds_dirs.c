@@ -30,11 +30,11 @@ void cmd_cwd(client_t *c, char *buf)
         return;
     }
     if (!buf) {
-        msgsend(c->f.fd, 202, "");
+        msgsend(c->f.fd, 550, "");
         return;
     }
     if (chdir(buf)) {
-        msgsend(c->f.fd, 451, strerror(errno));
+        msgsend(c->f.fd, 550, strerror(errno));
         return;
     }
     mfree(c->path);
